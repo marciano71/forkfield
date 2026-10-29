@@ -20,7 +20,7 @@ async function boot() {
   try {
     const h = await api("/api/health");
     $("health").innerHTML = h.comfy
-      ? `<span class="ok">●</span> Connected to ComfyUI (${h.comfyUrl}) · ${h.engine === "partner" ? "FLUX 3 + LTX-2.5 partner nodes" : "open weights: Qwen-Image-Edit + LTX-2.5"}${h.apiKey ? "" : " · add COMFY_API_KEY to .env to generate"}`
+      ? `<span class="ok">●</span> Connected to ComfyUI (${h.comfyUrl}) · ${h.engine === "partner" ? "FLUX 3 + LTX-2.5 partner nodes" : "open weights: Qwen-Image-Edit + LTX-2.5"}${h.dailyLimit ? ` · free public demo, ${h.dailyLimit} clips a day` : h.apiKey ? "" : " · add COMFY_API_KEY to .env to generate"}`
       : `<span class="bad">●</span> ComfyUI is not running at ${h.comfyUrl}. Start it, then reload.`;
   } catch {}
 }

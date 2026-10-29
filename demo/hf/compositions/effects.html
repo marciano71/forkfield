@@ -1,0 +1,59 @@
+<template>
+  <style>
+    @font-face { font-family: "HN"; src: local("Helvetica Neue"), local("HelveticaNeue"); font-weight: 400; }
+    @font-face { font-family: "HN"; src: local("Helvetica Neue Bold"), local("HelveticaNeue-Bold"); font-weight: 700; }
+    #root { position: absolute; inset: 0; background: #141414; overflow: hidden; font-family: "HN", sans-serif; color: #F4F1EC; }
+    .fx-hero { position: absolute; left: 230px; top: 60px; width: 540px; height: 960px; border-radius: 28px; overflow: hidden; background: #000; }
+    .fx-hero { object-fit: cover; }
+    .fx-name { position: absolute; left: 880px; top: 420px; font-size: 150px; font-weight: 700; letter-spacing: -0.045em; line-height: 0.92; width: 960px; }
+    .fx-num { position: absolute; left: 886px; top: 340px; font-size: 32px; color: #DA1E28; font-weight: 700; letter-spacing: 0.06em; }
+    #fx-grid { position: absolute; left: 105px; top: 150px; display: grid; grid-template-columns: repeat(6, 270px); gap: 20px; }
+    .fx-tile { width: 270px; height: 480px; border-radius: 20px; overflow: hidden; position: relative; background: #2A2A2A; }
+    .fx-tile img { width: 100%; height: 100%; object-fit: cover; }
+    .fx-tile span { position: absolute; left: 0; right: 0; bottom: 0; padding: 50px 14px 14px; background: linear-gradient(transparent, rgba(0,0,0,.85)); font-size: 28px; font-weight: 700; }
+    #fx-six { position: absolute; left: 110px; top: 700px; font-size: 120px; font-weight: 700; letter-spacing: -0.04em; }
+    #fx-six em { font-style: normal; color: #DA1E28; }
+  </style>
+  <div id="root" data-composition-id="effects" data-width="1920" data-height="1080">
+    <video id="fx-h1" class="fx-hero clip" data-start="0" data-duration="1.25" src="assets/clips/5868a595.mp4" data-media-start="1.6" muted playsinline></video>
+    <video id="fx-h2" class="fx-hero clip" data-start="1.25" data-duration="1.5" src="assets/clips/39514667.mp4" data-media-start="1.6" muted playsinline></video>
+    <video id="fx-h3" class="fx-hero clip" data-start="2.75" data-duration="1.41" src="assets/clips/7e68b285.mp4" data-media-start="1.0" muted playsinline></video>
+    <video id="fx-h4" class="fx-hero clip" data-start="4.16" data-duration="1.79" src="assets/clips/f895af9f.mp4" data-media-start="1.3" muted playsinline></video>
+    <video id="fx-h5" class="fx-hero clip" data-start="5.95" data-duration="1.77" src="assets/clips/4c78534b.mp4" data-media-start="1.8" muted playsinline></video>
+    <video id="fx-h6" class="fx-hero clip" data-start="7.72" data-duration="1.85" src="assets/clips/d0321769.mp4" data-media-start="1.4" muted playsinline></video>
+
+    <div id="fx-n1" class="fx-name clip" data-start="0" data-duration="1.25">Portal to Mars</div>
+    <div id="fx-n2" class="fx-name clip" data-start="1.25" data-duration="1.5">Action Figure</div>
+    <div id="fx-n3" class="fx-name clip" data-start="2.75" data-duration="1.41">Museum Piece</div>
+    <div id="fx-n4" class="fx-name clip" data-start="4.16" data-duration="1.79">Outfit Flip</div>
+    <div id="fx-n5" class="fx-name clip" data-start="5.95" data-duration="1.77">Earth Zoom Out</div>
+    <div id="fx-n6" class="fx-name clip" data-start="7.72" data-duration="1.85">Comic Panel</div>
+    <div id="fx-num" class="fx-num clip" data-start="0" data-duration="9.57">EFFECT</div>
+
+    <div id="fx-grid" class="clip" data-start="9.57" data-duration="2.55">
+      <div class="fx-tile" id="fx-t1"><img src="assets/clips/5868a595.jpg" alt=""><span>Portal to Mars</span></div>
+      <div class="fx-tile" id="fx-t2"><img src="assets/clips/39514667.jpg" alt=""><span>Action Figure</span></div>
+      <div class="fx-tile" id="fx-t3"><img src="assets/clips/7e68b285.jpg" alt=""><span>Museum Piece</span></div>
+      <div class="fx-tile" id="fx-t4"><img src="assets/clips/f895af9f.jpg" alt=""><span>Outfit Flip</span></div>
+      <div class="fx-tile" id="fx-t5"><img src="assets/clips/4c78534b.jpg" alt=""><span>Earth Zoom Out</span></div>
+      <div class="fx-tile" id="fx-t6"><img src="assets/clips/d0321769.jpg" alt=""><span>Comic Panel</span></div>
+    </div>
+    <div id="fx-six" class="clip" data-start="9.6" data-duration="2.52">Six recipes <em>to fork.</em></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const starts = [0, 1.25, 2.75, 4.16, 5.95, 7.72];
+    starts.forEach((t, i) => {
+      const n = i + 1;
+      tl.fromTo(`#fx-h${n}`, { clipPath: "inset(0 0 0 100% round 28px)" }, { clipPath: "inset(0 0 0 0% round 28px)", duration: 0.32, ease: "expo.out" }, t);
+      tl.fromTo(`#fx-n${n}`, { x: 80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "expo.out" }, t + 0.05);
+    });
+    tl.fromTo("#fx-num", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0);
+    // grid: tiles drop in left to right, then "six recipes"
+    for (let i = 1; i <= 6; i++) {
+      tl.fromTo(`#fx-t${i}`, { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 9.57 + (i - 1) * 0.06);
+    }
+    tl.fromTo("#fx-six", { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 9.85);
+    window.__timelines["effects"] = tl;
+  </script>
+</template>

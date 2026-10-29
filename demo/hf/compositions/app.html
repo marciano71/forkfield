@@ -1,0 +1,113 @@
+<template>
+  <style>
+    @font-face { font-family: "HN"; src: local("Helvetica Neue"), local("HelveticaNeue"); font-weight: 400; }
+    @font-face { font-family: "HN"; src: local("Helvetica Neue Bold"), local("HelveticaNeue-Bold"); font-weight: 700; }
+    #root { position: absolute; inset: 0; background: #DA1E28; overflow: hidden; font-family: "HN", sans-serif; color: #F4F1EC; }
+    #ap-cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+    #ap-win { position: absolute; left: 110px; top: 60px; width: 1700px; height: 960px; border-radius: 22px; background: #141414; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+    #ap-bar { height: 64px; background: #1E1E1E; display: flex; align-items: center; gap: 12px; padding: 0 24px; }
+    .ap-dot { width: 16px; height: 16px; border-radius: 50%; background: #3A3A3A; }
+    #ap-url { margin-left: 24px; flex: 0 0 760px; height: 40px; border-radius: 20px; background: #2A2A2A; display: flex; align-items: center; padding: 0 22px; font-size: 24px; color: #CFCBC4; }
+    #ap-top { display: flex; justify-content: space-between; align-items: center; padding: 26px 60px 0; }
+    #ap-logo { font-weight: 700; font-size: 34px; letter-spacing: -0.02em; display: flex; gap: 10px; align-items: center; }
+    #ap-logo b { color: #DA1E28; font-size: 40px; }
+    #ap-nav { font-size: 24px; color: #9A9A9A; display: flex; gap: 32px; }
+    #ap-head { padding: 34px 60px 0; }
+    #ap-head h2 { margin: 0; font-size: 58px; letter-spacing: -0.03em; }
+    #ap-head p { margin: 8px 0 0; font-size: 28px; color: #9A9A9A; }
+    #ap-grid { position: absolute; left: 60px; top: 300px; display: grid; grid-template-columns: repeat(6, 250px); gap: 16px; }
+    .ap-card { position: relative; width: 250px; height: 389px; border-radius: 18px; overflow: hidden; border: 2px solid #333; background: #2A2A2A; }
+    .ap-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .ap-meta { position: absolute; left: 0; right: 0; bottom: 0; padding: 60px 14px 14px; background: linear-gradient(transparent, rgba(0,0,0,.88)); }
+    .ap-meta strong { display: block; font-size: 28px; }
+    #ap-c1 { border-color: #DA1E28; }
+    #ap-shade { position: absolute; inset: 64px 0 0 0; background: rgba(0,0,0,.7); }
+    #ap-sheet { opacity: 0; position: absolute; left: 470px; top: 100px; width: 760px; height: 820px; border-radius: 30px; background: #1E1E1E; border: 2px solid #333; padding: 34px; box-sizing: border-box; }
+    .ap-kick { font-size: 28px; letter-spacing: 0.14em; color: #9A9A9A; text-transform: uppercase; }
+    .ap-title { font-size: 48px; font-weight: 700; letter-spacing: -0.02em; margin: 4px 0 22px; }
+    #ap-pick { display: flex; gap: 22px; align-items: center; border: 2px dashed #555; border-radius: 22px; padding: 18px; height: 200px; box-sizing: border-box; }
+    #ap-thumb { width: 108px; height: 164px; border-radius: 14px; object-fit: cover; }
+    #ap-pick-text { font-size: 28px; color: #9A9A9A; line-height: 1.3; }
+    #ap-pick-text strong { color: #F4F1EC; font-size: 32px; }
+    #ap-ready { font-size: 32px; font-weight: 700; color: #F4F1EC; }
+    #ap-recipe { margin-top: 22px; border: 2px solid #333; border-radius: 22px; padding: 20px 24px; font-size: 28px; font-weight: 700; }
+    #ap-recipe span { font-weight: 400; color: #9A9A9A; }
+    #ap-go { margin-top: 26px; height: 92px; border-radius: 46px; background: #DA1E28; display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 700; color: #fff; }
+    #ap-fine { margin-top: 14px; font-size: 28px; color: #9A9A9A; text-align: center; }
+    #ap-wait { position: absolute; inset: 120px 34px 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #1E1E1E; }
+    #ap-loader { width: 110px; height: 110px; border-radius: 50%; border: 8px solid #2A2A2A; border-top-color: #DA1E28; }
+    #ap-wait-t { margin-top: 30px; font-size: 36px; font-weight: 700; }
+    #ap-timer { margin-top: 10px; font-size: 28px; color: #9A9A9A; }
+    #ap-result { clip-path: inset(50% 0 50% 0); position: absolute; left: 34px; right: 34px; top: 120px; bottom: 34px; border-radius: 22px; overflow: hidden; background: #000; }
+    #ap-result video { width: 100%; height: 100%; object-fit: cover; }
+    #ap-cursor { position: absolute; left: 0; top: 0; width: 64px; height: 64px; }
+    #ap-ring { position: absolute; width: 90px; height: 90px; border-radius: 50%; border: 5px solid #fff; }
+  </style>
+  <div id="root" data-composition-id="app" data-width="1920" data-height="1080">
+    <div id="ap-cam">
+      <div id="ap-win">
+        <div id="ap-bar"><span class="ap-dot"></span><span class="ap-dot"></span><span class="ap-dot"></span><div id="ap-url">forkfield.estoesmarte.workers.dev</div></div>
+        <div id="ap-top"><div id="ap-logo"><b>⑂</b> Forkfield</div><div id="ap-nav"><span>Effects</span><span>Fork tree</span><span>GitHub</span></div></div>
+        <div id="ap-head"><h2>Start from an effect</h2><p>Six recipes to fork. Edit any of them and you've made a new one.</p></div>
+        <div id="ap-grid">
+          <div class="ap-card" id="ap-c1"><img src="assets/clips/5868a595.jpg" alt=""><div class="ap-meta"><strong>Portal to Mars</strong></div></div>
+          <div class="ap-card"><img src="assets/clips/39514667.jpg" alt=""><div class="ap-meta"><strong>Action Figure</strong></div></div>
+          <div class="ap-card"><img src="assets/clips/7e68b285.jpg" alt=""><div class="ap-meta"><strong>Museum Piece</strong></div></div>
+          <div class="ap-card"><img src="assets/clips/f895af9f.jpg" alt=""><div class="ap-meta"><strong>Outfit Flip</strong></div></div>
+          <div class="ap-card"><img src="assets/clips/4c78534b.jpg" alt=""><div class="ap-meta"><strong>Earth Zoom Out</strong></div></div>
+          <div class="ap-card"><img src="assets/clips/d0321769.jpg" alt=""><div class="ap-meta"><strong>Comic Panel</strong></div></div>
+        </div>
+
+        <div id="ap-shade" data-layout-allow-overlap class="clip" data-start="1.55" data-duration="5.49"></div>
+        <div id="ap-sheet" data-layout-allow-overlap>
+          <div class="ap-kick">New clip</div>
+          <div class="ap-title">Portal to Mars</div>
+          <div id="ap-pick">
+            <img id="ap-thumb" class="clip" data-start="2.45" data-duration="4.59" src="assets/img/photo.png" alt="">
+            <div id="ap-pick-text" class="clip" data-start="1.55" data-duration="0.9"><strong>Add your photo</strong><br>Waist-up, vertical, good light.</div>
+            <div id="ap-ready" class="clip" data-start="2.45" data-duration="4.59">Photo ready</div>
+          </div>
+          <div id="ap-recipe">▸ Edit the recipe <span>(this makes a fork)</span></div>
+          <div id="ap-go">Generate clip</div>
+          <div id="ap-fine">About a minute. Open weights only.</div>
+          <div id="ap-wait" data-layout-allow-overlap class="clip" data-start="3.6" data-duration="1.75">
+            <div id="ap-loader"></div>
+            <div id="ap-wait-t">Animating with LTX-2.5…</div>
+            <div id="ap-timer">54 s, sped up</div>
+          </div>
+          <div id="ap-result" data-layout-allow-overlap>
+            <video id="ap-video" class="clip" data-start="5.35" data-duration="1.69" src="assets/clips/5868a595.mp4" data-media-start="2.2" muted playsinline></video>
+          </div>
+        </div>
+      </div>
+      <div id="ap-ring" class="clip" data-start="1.3" data-duration="0.5"></div>
+      <div id="ap-ring2" class="clip" data-start="3.35" data-duration="0.5" style="position:absolute;width:90px;height:90px;border-radius:50%;border:5px solid #fff;"></div>
+      <svg id="ap-cursor" class="clip" data-start="0" data-duration="5.3" viewBox="0 0 32 32"><path d="M6 3l20 12-9 2-4 9z" fill="#fff" stroke="#141414" stroke-width="2" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // window lands
+    tl.fromTo("#ap-win", { y: 60, scale: 0.96 }, { y: 0, scale: 1, duration: 0.5, ease: "expo.out" }, 0);
+    // cursor: enters, clicks Portal to Mars card (card centre ~ 245, 559)
+    tl.fromTo("#ap-cursor", { x: 1500, y: 1100 }, { x: 240, y: 560, duration: 1.0, ease: "power3.inOut" }, 0.2);
+    tl.fromTo("#ap-c1", { scale: 1 }, { scale: 0.96, duration: 0.08, yoyo: true, repeat: 1, ease: "power1.inOut" }, 1.3);
+    tl.fromTo("#ap-ring", { x: 196, y: 516, scale: 0.4, opacity: 1 }, { scale: 1.4, opacity: 0, duration: 0.45, ease: "power2.out" }, 1.3);
+    // sheet grows out of the card
+    tl.fromTo("#ap-shade", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.55);
+    tl.fromTo("#ap-sheet", { x: -520, y: 260, scale: 0.35, opacity: 0 }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.55, ease: "expo.out" }, 1.55);
+    // photo arrives
+    tl.fromTo("#ap-thumb", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 2.45);
+    // cursor to Generate (button centre ~ 960, 640 in frame), click
+    tl.to("#ap-cursor", { x: 930, y: 655, duration: 0.8, ease: "power3.inOut" }, 2.4);
+    tl.fromTo("#ap-go", { scale: 1 }, { scale: 0.95, duration: 0.08, yoyo: true, repeat: 1 }, 3.35);
+    tl.fromTo("#ap-ring2", { x: 886, y: 611, scale: 0.4, opacity: 1 }, { scale: 1.4, opacity: 0, duration: 0.45, ease: "power2.out" }, 3.35);
+    tl.to("#ap-cursor", { x: 1500, y: 1150, duration: 0.6, ease: "power2.in" }, 3.7);
+    // wait state
+    tl.fromTo("#ap-loader", { rotation: 0 }, { rotation: 720, duration: 1.75, ease: "none" }, 3.6);
+    // result: camera pushes into the sheet
+    tl.fromTo("#ap-result", { clipPath: "inset(50% 0 50% 0 round 22px)" }, { clipPath: "inset(0% 0 0% 0 round 22px)", duration: 0.45, ease: "expo.out" }, 5.35);
+    tl.fromTo("#ap-cam", { scale: 1, y: 0 }, { scale: 1.22, y: 40, duration: 0.6, ease: "power3.inOut" }, 5.4);
+    window.__timelines["app"] = tl;
+  </script>
+</template>

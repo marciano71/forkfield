@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "assets": "rm -rf public && mkdir -p public/samples && cp -R ../../web/. public/ && cp -R ../../samples/clips public/samples/clips",
-    "deploy": "npm run assets && cf deploy"
+    "deploy": "npm run assets && cf deploy",
+    "deploy:with-key": "npm run assets && grep '^COMFY_API_KEY=' ../../.env > .secret.env && cf deploy --secrets-file .secret.env; rm -f .secret.env"
   },
   "devDependencies": {
     "cf": "^0.15.0",

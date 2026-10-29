@@ -1,0 +1,68 @@
+<template>
+  <style>
+    @font-face { font-family: "HN"; src: local("Helvetica Neue"), local("HelveticaNeue"); font-weight: 400; }
+    @font-face { font-family: "HN"; src: local("Helvetica Neue Bold"), local("HelveticaNeue-Bold"); font-weight: 700; }
+    #root { position: absolute; inset: 0; background: #141414; overflow: hidden; font-family: "HN", sans-serif; color: #F4F1EC; }
+    .cl-big { position: absolute; left: 140px; font-size: 136px; font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
+    .cl-mask { display: block; overflow: hidden; padding-bottom: 8px; }
+    .cl-mask > span { display: block; }
+    #cl-1 { top: 210px; } #cl-2 { top: 370px; } #cl-3 { top: 600px; }
+    #cl-3 em { font-style: normal; color: #DA1E28; }
+    #cl-strip { position: absolute; right: -40px; top: 0; width: 560px; height: 1080px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; transform: rotate(0deg); }
+    #cl-strip img { width: 100%; height: 470px; object-fit: cover; border-radius: 18px; }
+    #cl-lock { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #cl-mark { display: flex; align-items: center; gap: 34px; }
+    #cl-icon { width: 200px; height: 200px; }
+    #cl-word { font-size: 170px; font-weight: 700; letter-spacing: -0.05em; overflow: hidden; }
+    #cl-word span { display: block; }
+    #cl-tag { margin-top: 24px; font-size: 64px; font-weight: 700; letter-spacing: -0.03em; }
+    #cl-tag em { font-style: normal; color: #DA1E28; }
+    #cl-links { margin-top: 56px; display: flex; gap: 22px; }
+    .cl-pill { border: 3px solid #F4F1EC; border-radius: 999px; padding: 16px 30px; font-size: 32px; font-weight: 700; }
+    .cl-pill.red { background: #DA1E28; border-color: #DA1E28; }
+    #cl-hash { margin-top: 34px; font-size: 32px; color: #9A9A9A; letter-spacing: 0.06em; }
+  </style>
+  <div id="root" data-composition-id="close" data-width="1920" data-height="1080">
+    <div id="cl-words" class="clip" data-start="0" data-duration="7.3">
+      <div id="cl-1" class="cl-big"><span class="cl-mask"><span id="cl-1a">No preset store.</span></span></div>
+      <div id="cl-2" class="cl-big"><span class="cl-mask"><span id="cl-2a">No gatekeeper.</span></span></div>
+      <div id="cl-3" class="cl-big"><span class="cl-mask"><span id="cl-3a">The video is</span></span><span class="cl-mask"><span id="cl-3b">the <em>preset.</em></span></span></div>
+      <div id="cl-strip">
+        <img src="assets/clips/5868a595.jpg" alt=""><img src="assets/clips/39514667.jpg" alt="">
+        <img src="assets/clips/7e68b285.jpg" alt=""><img src="assets/clips/f895af9f.jpg" alt="">
+        <img src="assets/clips/4c78534b.jpg" alt=""><img src="assets/clips/d0321769.jpg" alt="">
+      </div>
+    </div>
+
+    <div id="cl-lock" class="clip" data-start="7.3" data-duration="8.4">
+      <div id="cl-mark">
+        <svg id="cl-icon" viewBox="0 0 64 64"><rect id="cl-sq" width="64" height="64" rx="14" fill="#DA1E28"/><path id="cl-fork" d="M32 54V34M32 34 18 20M32 34l14-14M18 20v-8M46 20v-8" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/></svg>
+        <div id="cl-word"><span id="cl-word-in">Forkfield</span></div>
+      </div>
+      <div id="cl-tag">Fork any <em>video.</em></div>
+      <div id="cl-links">
+        <div class="cl-pill" id="cl-p1">MIT · github.com/marciano71/forkfield</div>
+      </div>
+      <div id="cl-links2" style="margin-top:20px;display:flex;gap:22px">
+        <div class="cl-pill red" id="cl-p2">Try it: forkfield.estoesmarte.workers.dev</div>
+      </div>
+      <div id="cl-hash">#OpenSourceHiggsfield · built on ComfyUI</div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const up = (s, t) => tl.fromTo(s, { yPercent: 105 }, { yPercent: 0, duration: 0.45, ease: "expo.out" }, t);
+    up("#cl-1a", 0.1); up("#cl-2a", 2.1); up("#cl-3a", 4.15); up("#cl-3b", 4.35);
+    tl.fromTo("#cl-strip", { y: 0 }, { y: -420, duration: 7.3, ease: "none" }, 0);
+    tl.fromTo("#cl-strip", { opacity: 0 }, { opacity: 0.9, duration: 0.5 }, 0);
+    // the mark is performed: square lands, the fork draws, the wordmark wipes in
+    tl.fromTo("#cl-icon", { scale: 0.2, rotation: -20 }, { scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.8)" }, 7.32);
+    tl.fromTo("#cl-fork", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" }, 7.55);
+    tl.fromTo("#cl-word-in", { xPercent: -105 }, { xPercent: 0, duration: 0.55, ease: "expo.out" }, 7.7);
+    tl.fromTo("#cl-tag", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 8.95);
+    tl.fromTo("#cl-p1", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 10.87);
+    tl.fromTo("#cl-p2", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 13.2);
+    tl.fromTo("#cl-hash", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 13.5);
+    window.__timelines["close"] = tl;
+  </script>
+</template>

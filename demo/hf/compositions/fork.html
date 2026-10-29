@@ -1,0 +1,135 @@
+<template>
+  <style>
+    @font-face { font-family: "HN"; src: local("Helvetica Neue"), local("HelveticaNeue"); font-weight: 400; }
+    @font-face { font-family: "HN"; src: local("Helvetica Neue Bold"), local("HelveticaNeue-Bold"); font-weight: 700; }
+    #root { position: absolute; inset: 0; background: #141414; overflow: hidden; font-family: "HN", sans-serif; color: #F4F1EC; }
+    #fk-win { position: absolute; left: 90px; top: 80px; width: 1140px; height: 920px; border-radius: 22px; background: #1A1A1A; overflow: hidden; border: 2px solid #2E2E2E; }
+    #fk-bar { height: 60px; background: #222; display: flex; align-items: center; gap: 12px; padding: 0 22px; }
+    .fk-dot { width: 15px; height: 15px; border-radius: 50%; background: #3A3A3A; }
+    #fk-url { margin-left: 20px; width: 640px; height: 38px; border-radius: 19px; background: #2C2C2C; display: flex; align-items: center; padding: 0 20px; font-size: 22px; color: #CFCBC4; }
+    #fk-hero { position: absolute; left: 60px; top: 110px; right: 60px; }
+    #fk-hero h1 { margin: 0; font-size: 120px; line-height: 0.9; letter-spacing: -0.05em; }
+    #fk-hero h1 em { font-style: normal; color: #DA1E28; }
+    #fk-drop { position: absolute; left: 60px; right: 60px; top: 420px; height: 330px; border: 4px dashed #4A4A4A; border-radius: 26px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: #202020; }
+    #fk-drop b { font-size: 70px; color: #DA1E28; line-height: 1; }
+    #fk-drop strong { font-size: 38px; }
+    #fk-drop span { font-size: 24px; color: #9A9A9A; }
+    #fk-chip { position: absolute; left: 0; top: 0; width: 300px; display: flex; gap: 14px; align-items: center; background: #F4F1EC; color: #141414; border-radius: 16px; padding: 12px; box-shadow: 0 18px 40px rgba(0,0,0,.45); }
+    #fk-chip img { width: 60px; height: 104px; border-radius: 8px; object-fit: cover; }
+    #fk-chip div { font-size: 24px; font-weight: 700; line-height: 1.15; }
+    #fk-cursor { position: absolute; left: 0; top: 0; width: 64px; height: 64px; }
+    #fk-shade { position: absolute; inset: 60px 0 0 0; background: rgba(0,0,0,.72); }
+    #fk-sheet { position: absolute; left: 150px; top: 100px; width: 840px; height: 790px; border-radius: 28px; background: #222; border: 2px solid #383838; padding: 30px; box-sizing: border-box; }
+    .fk-kick { font-size: 28px; letter-spacing: 0.14em; color: #9A9A9A; text-transform: uppercase; }
+    .fk-title { font-size: 46px; font-weight: 700; letter-spacing: -0.02em; margin: 4px 0 16px; position: relative; height: 56px; }
+    .fk-title span { position: absolute; left: 0; top: 0; white-space: nowrap; }
+    #fk-ofs { font-size: 26px; background: #2A1517; border: 2px solid #A8141C; border-radius: 16px; padding: 14px 18px; line-height: 1.3; }
+    #fk-pick { margin-top: 16px; display: flex; gap: 18px; align-items: center; border: 2px dashed #555; border-radius: 18px; padding: 14px; height: 150px; box-sizing: border-box; }
+    #fk-thumb { width: 78px; height: 120px; border-radius: 10px; object-fit: cover; }
+    #fk-pick-a, #fk-pick-b { font-size: 28px; }
+    #fk-pick-a { color: #9A9A9A; }
+    #fk-pick-b { font-weight: 700; }
+    #fk-edit { margin-top: 16px; border: 2px solid #383838; border-radius: 18px; padding: 16px 18px; }
+    #fk-edit-h { font-size: 26px; font-weight: 700; }
+    #fk-edit-h span { color: #9A9A9A; font-weight: 400; }
+    #fk-motion { margin-top: 12px; background: #141414; border: 2px solid #383838; border-radius: 12px; padding: 14px; font-size: 25px; line-height: 1.4; color: #CFCBC4; height: 140px; box-sizing: border-box; position: relative; }
+    .fk-old, .fk-new { padding: 0 4px; border-radius: 4px; }
+    .fk-old { background: rgba(218,30,40,.25); color: #FFB4B4; }
+    .fk-new { background: #DA1E28; color: #fff; }
+    #fk-go { margin-top: 18px; height: 80px; border-radius: 40px; background: #DA1E28; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; color: #fff; }
+    #fk-tree { position: absolute; inset: 60px 0 0 0; background: #1A1A1A; padding: 50px 60px; box-sizing: border-box; }
+    #fk-tree h2 { margin: 0 0 30px; font-size: 64px; letter-spacing: -0.03em; }
+    .fk-node { position: absolute; display: flex; gap: 18px; align-items: center; width: 720px; height: 150px; box-sizing: border-box; background: #222; border: 2px solid #383838; border-radius: 18px; padding: 14px; }
+    .fk-node img { width: 78px; height: 120px; object-fit: cover; border-radius: 10px; }
+    .fk-node b { display: block; font-size: 32px; }
+    .fk-node span { font-size: 24px; color: #9A9A9A; }
+    #fk-n1 { left: 60px; top: 170px; }
+    #fk-n2 { left: 160px; top: 360px; border-color: #DA1E28; }
+    #fk-n3 { left: 160px; top: 540px; }
+    #fk-n4 { left: 260px; top: 720px; width: 620px; }
+    #fk-link { position: absolute; left: 0; top: 0; }
+    .fk-cap { position: absolute; left: 1290px; width: 560px; font-size: 54px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.04; top: 380px; }
+    .fk-cap small { display: block; margin-top: 16px; font-size: 30px; font-weight: 400; color: #9A9A9A; letter-spacing: 0; line-height: 1.3; }
+    .fk-cap em { font-style: normal; color: #DA1E28; }
+  </style>
+  <div id="root" data-composition-id="fork" data-width="1920" data-height="1080">
+    <div id="fk-win">
+      <div id="fk-bar"><span class="fk-dot"></span><span class="fk-dot"></span><span class="fk-dot"></span><div id="fk-url">forkfield.estoesmarte.workers.dev</div></div>
+      <div id="fk-hero"><h1>Fork any<br><em>video.</em></h1></div>
+      <div id="fk-drop"><b>⑂</b><strong>Drop a Forkfield video</strong><span>we read the recipe, never upload your clip anywhere else</span></div>
+
+      <div id="fk-shade" data-layout-allow-overlap class="clip" data-start="2.6" data-duration="13.9"></div>
+      <div id="fk-sheet" data-layout-allow-overlap class="clip" data-start="2.6" data-duration="13.9">
+        <div class="fk-kick">Fork</div>
+        <div class="fk-title"><span id="fk-t1">Museum Piece</span><span id="fk-t2">Museum Piece <span style="position:static;color:#DA1E28">(remix)</span></span></div>
+        <div id="fk-ofs">⑂ Forking <b>Museum Piece</b> by forkfield. Same recipe, your photo.</div>
+        <div id="fk-pick">
+          <img id="fk-thumb" class="clip" data-start="8.75" data-duration="7.75" src="assets/img/photo.png" alt="">
+          <div id="fk-pick-a" class="clip" data-start="2.6" data-duration="6.15">Add your photo</div>
+          <div id="fk-pick-b" class="clip" data-start="8.75" data-duration="7.75">Photo ready</div>
+        </div>
+        <div id="fk-edit">
+          <div id="fk-edit-h">▾ Edit the recipe <span>(this makes a fork)</span></div>
+          <div id="fk-motion">…the camera slowly pulls back to reveal an ornate gold frame on a red museum wall. Soft museum echo, brush strokes,
+            <span id="fk-oldw" class="fk-old clip" data-start="2.6" data-duration="10.4">a single piano note.</span><span id="fk-neww" class="fk-new clip" data-start="13.0" data-duration="3.5">a choir hitting one bright note.</span></div>
+        </div>
+        <div id="fk-go">Generate clip</div>
+      </div>
+
+      <div id="fk-tree" data-layout-allow-overlap class="clip" data-start="16.5" data-duration="4.9">
+        <h2>Fork tree</h2>
+        <div class="fk-node" id="fk-n1"><img src="assets/clips/7e68b285.jpg" alt=""><div><b>Museum Piece</b><span>by forkfield · the original</span></div></div>
+        <div class="fk-node" id="fk-n2"><img src="assets/clips/6aef3050.jpg" alt=""><div><b>Museum Piece (remix)</b><span>by you · forked from Museum Piece</span></div></div>
+        <div class="fk-node" id="fk-n3" style="border-style:dashed;background:transparent"><div style="width:78px;height:120px;border-radius:10px;border:2px dashed #555;display:grid;place-items:center;color:#DA1E28;font-size:44px">⑂</div><div><b style="color:#9A9A9A">Your fork goes here</b><span>drop any clip, add a photo</span></div></div>
+        <svg id="fk-link" width="1140" height="860" viewBox="0 0 1140 860">
+          <path id="fk-p1" d="M110 320 V420 H160" stroke="#DA1E28" stroke-width="5" fill="none" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
+          <path id="fk-p2" d="M110 420 V600 H160" stroke="#DA1E28" stroke-width="5" fill="none" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="fk-chip" data-layout-allow-overflow data-layout-allow-overlap class="clip" data-start="0.9" data-duration="1.7"><img src="assets/clips/7e68b285.jpg" alt=""><div>museum-piece.mp4<br><span style="font-weight:400;font-size:26px">from a friend</span></div></div>
+    <svg id="fk-cursor" class="clip" data-start="0.9" data-duration="1.9" viewBox="0 0 32 32"><path d="M6 3l20 12-9 2-4 9z" fill="#fff" stroke="#141414" stroke-width="2" stroke-linejoin="round"/></svg>
+
+    <div id="fk-c1" class="fk-cap clip" data-start="0.1" data-duration="2.9">See a clip<br>you like?<small>Drop it in.</small></div>
+    <div id="fk-c2" class="fk-cap clip" data-start="3.0" data-duration="5.75">Read in<br><em>your browser.</em><small>The file never leaves your device.</small></div>
+    <div id="fk-c3" class="fk-cap clip" data-start="8.75" data-duration="3.49">Your photo.<br>Same recipe.<small>You just forked it.</small></div>
+    <div id="fk-c4" class="fk-cap clip" data-start="12.24" data-duration="4.26">Change<br>one line.<small>Now it's a brand new effect.</small></div>
+    <div id="fk-c5" class="fk-cap clip" data-start="16.5" data-duration="4.9">Linked back<br>to <em>where it<br>came from.</em><small>Every fork lands in the fork tree.</small></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#fk-win", { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 0);
+    [["#fk-c1", 0.1], ["#fk-c2", 3.0], ["#fk-c3", 8.75], ["#fk-c4", 12.24], ["#fk-c5", 16.5]].forEach(([s, t]) =>
+      tl.fromTo(s, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, t));
+    // drag the file into the drop zone (drop zone centre ~ 660, 665 in frame)
+    tl.fromTo("#fk-chip", { x: -340, y: 760, rotation: -8 }, { x: 520, y: 600, rotation: 3, duration: 1.3, ease: "power3.inOut" }, 0.9);
+    tl.fromTo("#fk-cursor", { x: -60, y: 830 }, { x: 800, y: 670, duration: 1.3, ease: "power3.inOut" }, 0.9);
+    tl.fromTo("#fk-drop", { borderColor: "#4A4A4A", backgroundColor: "#202020" }, { borderColor: "#DA1E28", backgroundColor: "#2A1517", duration: 0.2 }, 1.9);
+    tl.to("#fk-chip", { scale: 0.5, opacity: 0, duration: 0.3, ease: "power2.in" }, 2.25);
+    // the fork sheet opens with the recipe already read
+    tl.fromTo("#fk-shade", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 2.6);
+    tl.fromTo("#fk-sheet", { y: 80, scale: 0.9, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" }, 2.6);
+    tl.fromTo("#fk-ofs", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3 }, 3.0);
+    // slow push while the recipe is read and the photo goes in
+    tl.fromTo("#fk-sheet", { scale: 1 }, { scale: 1.06, duration: 5.6, ease: "sine.inOut" }, 3.2);
+    tl.fromTo("#fk-ofs", { backgroundColor: "#2A1517" }, { backgroundColor: "#4A1418", duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, 4.6);
+    tl.to("#fk-sheet", { scale: 1, duration: 3.2, ease: "sine.inOut" }, 9.0);
+    tl.fromTo("#fk-thumb", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2)" }, 8.75);
+    tl.fromTo("#fk-pick", { borderColor: "#555" }, { borderColor: "#DA1E28", duration: 0.25 }, 8.75);
+    // one line of the recipe changes
+    tl.fromTo("#fk-edit", { borderColor: "#383838" }, { borderColor: "#DA1E28", duration: 0.25 }, 12.24);
+    tl.fromTo("#fk-oldw", { opacity: 1 }, { opacity: 0.35, duration: 0.3 }, 12.4);
+    tl.fromTo("#fk-neww", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "steps(30)" }, 13.0);
+    tl.fromTo("#fk-t1", { opacity: 1 }, { opacity: 0, duration: 0.15 }, 15.3);
+    tl.fromTo("#fk-t2", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 15.3);
+    // the fork tree
+    tl.fromTo("#fk-tree", { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.5, ease: "expo.inOut" }, 16.5);
+    tl.fromTo("#fk-n1", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, 16.8);
+    tl.fromTo("#fk-p1", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, 17.15);
+    tl.fromTo("#fk-n2", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, 17.5);
+    tl.fromTo("#fk-p2", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.45 }, 19.0);
+    tl.fromTo("#fk-n3", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, 19.3);
+    window.__timelines["fork"] = tl;
+  </script>
+</template>

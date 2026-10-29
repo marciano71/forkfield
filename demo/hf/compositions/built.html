@@ -1,0 +1,136 @@
+<template>
+  <style>
+    @font-face { font-family: "HN"; src: local("Helvetica Neue"), local("HelveticaNeue"); font-weight: 400; }
+    @font-face { font-family: "HN"; src: local("Helvetica Neue Bold"), local("HelveticaNeue-Bold"); font-weight: 700; }
+    #root { position: absolute; inset: 0; background: #F4F1EC; overflow: hidden; font-family: "HN", sans-serif; color: #141414; }
+    .bt-h { position: absolute; left: 120px; top: 90px; font-size: 76px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+    .bt-h em { font-style: normal; color: #DA1E28; }
+    .bt-sub { position: absolute; left: 124px; top: 186px; font-size: 32px; color: #5a5a5a; }
+    /* graph */
+    .bt-node { position: absolute; top: 420px; width: 300px; height: 300px; border-radius: 22px; background: #fff; border: 3px solid #141414; box-sizing: border-box; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; }
+    .bt-node b { font-size: 34px; letter-spacing: -0.02em; line-height: 1.05; }
+    .bt-node span { font-size: 28px; color: #5a5a5a; line-height: 1.25; }
+    .bt-node.red { background: #DA1E28; border-color: #DA1E28; color: #fff; }
+    .bt-node.red span { color: #FFE1E3; }
+    .bt-node.img { padding: 0; overflow: hidden; }
+    .bt-node.img img { width: 100%; height: 100%; object-fit: cover; }
+    #bt-g1 { left: 120px; } #bt-g2 { left: 470px; } #bt-g3 { left: 820px; } #bt-g4 { left: 1170px; } #bt-g5 { left: 1520px; }
+    #bt-wires { position: absolute; left: 0; top: 0; }
+    .bt-tag { position: absolute; top: 750px; font-size: 28px; font-weight: 700; letter-spacing: 0.1em; color: #DA1E28; }
+    /* qwen + ltx */
+    .bt-frame { position: absolute; top: 120px; width: 450px; height: 800px; border-radius: 24px; overflow: hidden; background: #000; }
+    .bt-frame img { width: 100%; height: 100%; object-fit: cover; }
+    video.bt-frame { object-fit: cover; }
+    #bt-f1 { left: 120px; } #bt-f2 { left: 735px; } #bt-f3 { left: 1350px; }
+    .bt-cap { position: absolute; top: 950px; font-size: 30px; font-weight: 700; }
+    .bt-cap span { font-weight: 400; color: #5a5a5a; }
+    .bt-arrow { position: absolute; top: 470px; font-size: 90px; color: #DA1E28; font-weight: 700; }
+    /* number */
+    #bt-num { position: absolute; left: 120px; top: 230px; font-size: 420px; font-weight: 700; letter-spacing: -0.06em; line-height: 0.85; }
+    #bt-num-u { position: absolute; left: 1010px; top: 330px; font-size: 120px; font-weight: 700; color: #DA1E28; letter-spacing: -0.04em; }
+    #bt-num-s { position: absolute; left: 128px; top: 640px; font-size: 44px; width: 1500px; line-height: 1.25; }
+    #bt-num-s span { color: #5a5a5a; }
+    /* terminal */
+    #bt-term { position: absolute; left: 120px; top: 260px; width: 1680px; height: 640px; border-radius: 22px; background: #141414; color: #F4F1EC; font-family: "JetBrains Mono", monospace; font-size: 30px; line-height: 1.5; padding: 40px 44px; box-sizing: border-box; overflow: hidden; }
+    #bt-term .p { color: #DA1E28; }
+    #bt-term .g { color: #9A9A9A; }
+    .bt-tl { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* phone */
+    #bt-phone { position: absolute; left: 1180px; top: 60px; width: 452px; height: 960px; border-radius: 60px; background: #141414; padding: 16px; box-sizing: border-box; }
+    #bt-phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 46px; }
+    #bt-cf-h { position: absolute; left: 120px; top: 330px; font-size: 76px; font-weight: 700; letter-spacing: -0.04em; line-height: 1.02; width: 960px; }
+    #bt-cf-s { position: absolute; left: 124px; top: 580px; font-size: 36px; color: #5a5a5a; line-height: 1.35; width: 960px; }
+    #bt-cf-s b { color: #141414; }
+  </style>
+  <div id="root" data-composition-id="built" data-width="1920" data-height="1080">
+    <!-- 1. the graph -->
+    <div id="bt-s1" class="clip" data-start="0" data-duration="4.52">
+      <div class="bt-h">One ComfyUI graph. <em>Open weights only.</em></div>
+      <div class="bt-sub">workflows/forkfield_open.api.json · 50 nodes · no partner APIs</div>
+      <div class="bt-node img" id="bt-g1"><img src="assets/img/photo.png" alt=""></div>
+      <div class="bt-node" id="bt-g2"><b>Qwen-Image-Edit 2511</b><span>+ Lightning LoRA, 4 steps<br>draws the final frame</span></div>
+      <div class="bt-node img" id="bt-g3"><img src="assets/img/end_mars.png" alt=""></div>
+      <div class="bt-node" id="bt-g4"><b>LTX-2.5 22B distilled</b><span>first + last frame<br>to video, with audio</span></div>
+      <div class="bt-node red" id="bt-g5"><b>clip.mp4</b><span>video + sound<br>+ ⑂ recipe</span></div>
+      <div class="bt-tag" style="left:120px">YOUR PHOTO</div>
+      <div class="bt-tag" style="left:820px">END FRAME</div>
+      <svg id="bt-wires" width="1920" height="1080" viewBox="0 0 1920 1080">
+        <path id="bt-w1" d="M420 570 H470" stroke="#141414" stroke-width="6" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
+        <path id="bt-w2" d="M770 570 H820" stroke="#141414" stroke-width="6" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
+        <path id="bt-w3" d="M1120 570 H1170" stroke="#141414" stroke-width="6" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
+        <path id="bt-w4" d="M1470 570 H1520" stroke="#141414" stroke-width="6" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/>
+        <path id="bt-w5" d="M270 720 V800 H1320 V720" stroke="#DA1E28" stroke-width="5" fill="none" stroke-dasharray="14 10" opacity="0"/>
+      </svg>
+    </div>
+
+    <!-- 2. qwen draws the final frame, ltx animates between -->
+    <div id="bt-s2" class="clip" data-start="4.52" data-duration="10.24">
+      <div class="bt-frame" id="bt-f1"><img src="assets/img/photo.png" alt=""></div>
+      <div class="bt-frame" id="bt-f3"><img src="assets/img/end_mars.png" alt=""></div>
+      <div class="bt-arrow" id="bt-a1" style="left:610px">→</div>
+      <div class="bt-arrow" id="bt-a2" style="left:1225px">→</div>
+      <div class="bt-cap" id="bt-cap1" style="left:120px">Your photo</div>
+      <div class="bt-cap" id="bt-cap3" style="left:1350px">Qwen-Image-Edit <span>· same face</span></div>
+      <div class="bt-cap clip" id="bt-cap2" data-start="8.48" data-duration="6.28" style="left:735px">LTX-2.5 <span>· with audio</span></div>
+    </div>
+
+    <video id="bt-f2" class="bt-frame clip" data-start="8.48" data-duration="6.28" src="assets/clips/5868a595.mp4" muted playsinline></video>
+
+    <!-- 3. gpu time -->
+    <div id="bt-s3" class="clip" data-start="14.76" data-duration="4.2">
+      <div id="bt-num">53</div>
+      <div id="bt-num-u">seconds of GPU</div>
+      <div id="bt-num-s">per 5-second clip on Comfy Cloud (RTX Pro 6000).<br><span>About 14 credits. Measured on our own runs.</span></div>
+    </div>
+
+    <!-- 4. the graph rides in the file -->
+    <div id="bt-s4" class="clip" data-start="18.96" data-duration="2.56">
+      <div class="bt-h">The graph rides <em>inside the file.</em></div>
+      <div id="bt-term">
+        <span class="bt-tl" id="bt-t0"><span class="p">$</span> ffprobe -show_format portal-to-mars.mp4</span>
+        <span class="bt-tl" id="bt-t1"><span class="g">TAG:</span>prompt={"1": {"class_type": "LoadImage", "inputs": {"image": "0c6727…</span>
+        <span class="bt-tl" id="bt-t2"><span class="g">     </span>"10": {"class_type": "UNETLoader", "inputs": {"unet_name": "qwen_image_edit…</span>
+        <span class="bt-tl" id="bt-t3"><span class="g">     </span>… 9,047 characters: the whole ComfyUI graph</span>
+        <span class="bt-tl" id="bt-t4"><span class="g">TAG:</span>comment=<span class="p">forkfield:</span>eyJmb3JrZmllbGQiOjEsImlkIjoiNTg2OGE1OTUiLCJwYXJlbnQiOm51bGws…</span>
+        <span class="bt-tl" id="bt-t5"><span class="g">     </span>… the Forkfield recipe, base64</span>
+      </div>
+    </div>
+
+    <!-- 5. cloudflare -->
+    <div id="bt-s5" class="clip" data-start="21.52" data-duration="3.68">
+      <div id="bt-cf-h">The public demo runs on <em style="font-style:normal;color:#DA1E28">Cloudflare Workers.</em></div>
+      <div id="bt-cf-s"><b>forkfield.estoesmarte.workers.dev</b><br>Workers + KV in front of Comfy Cloud,<br>with a daily cap. Try it on your phone.</div>
+      <div id="bt-phone"><img src="assets/img/mobile.jpg" alt=""></div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // graph builds left to right along its wires
+    tl.fromTo("#bt-s1 .bt-h", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 0.05);
+    tl.fromTo("#bt-s1 .bt-sub", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.4);
+    ["#bt-g1", "#bt-g2", "#bt-g3", "#bt-g4", "#bt-g5"].forEach((s, i) => {
+      tl.fromTo(s, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, 0.6 + i * 0.55);
+      if (i < 4) tl.fromTo(`#bt-w${i + 1}`, { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.3, ease: "power2.out" }, 0.85 + i * 0.55);
+    });
+    tl.fromTo(".bt-tag", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.2);
+    // qwen pair
+    tl.fromTo("#bt-f1", { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 4.55);
+    tl.fromTo("#bt-f3", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 4.8);
+    tl.fromTo(["#bt-cap1", "#bt-cap3"], { opacity: 0 }, { opacity: 1, duration: 0.3 }, 5.0);
+    tl.fromTo(["#bt-a1", "#bt-a2"], { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3 }, 5.2);
+    tl.fromTo("#bt-f2", { clipPath: "inset(50% 0 50% 0 round 24px)" }, { clipPath: "inset(0% 0 0% 0 round 24px)", duration: 0.5, ease: "expo.out" }, 8.48);
+    // the number counts up
+    const n = { v: 0 };
+    tl.fromTo(n, { v: 0 }, { v: 53, duration: 1.1, ease: "power2.out", onUpdate: () => { const el = document.getElementById("bt-num"); if (el) el.textContent = Math.round(n.v); } }, 14.8);
+    tl.fromTo("#bt-num-u", { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 15.3);
+    tl.fromTo("#bt-num-s", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, 15.7);
+    // terminal prints
+    tl.fromTo("#bt-s4 .bt-h", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, 18.98);
+    for (let i = 0; i <= 5; i++) tl.fromTo(`#bt-t${i}`, { opacity: 0 }, { opacity: 1, duration: 0.1 }, 19.1 + i * 0.22);
+    // phone
+    tl.fromTo("#bt-phone", { y: 140, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, 21.55);
+    tl.fromTo("#bt-cf-h", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 21.6);
+    tl.fromTo("#bt-cf-s", { opacity: 0 }, { opacity: 1, duration: 0.35 }, 22.0);
+    window.__timelines["built"] = tl;
+  </script>
+</template>

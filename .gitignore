@@ -5,3 +5,8 @@ data/
 reference/
 node_modules/
 .DS_Store
+demo/vo.mp3
+demo/out/
+demo/hf/.hyperframes/
+demo/hf/assets/
+ENVIO_CONCURSO.md

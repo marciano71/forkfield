@@ -1,0 +1,55 @@
+<template>
+  <style>
+    @font-face { font-family: "HN"; src: local("Helvetica Neue"), local("HelveticaNeue"); font-weight: 400; }
+    @font-face { font-family: "HN"; src: local("Helvetica Neue Bold"), local("HelveticaNeue-Bold"); font-weight: 700; }
+    #root { position: absolute; inset: 0; background: #141414; overflow: hidden; font-family: "HN", sans-serif; color: #F4F1EC; }
+    .hk-line { position: absolute; left: 140px; width: 1060px; font-weight: 700; font-size: 104px; line-height: 0.98; letter-spacing: -0.035em; }
+    .hk-mask { overflow: hidden; display: block; padding-bottom: 8px; }
+    .hk-mask > span { display: block; }
+    .hk-red { color: #DA1E28; }
+    #hk-l1 { top: 300px; }
+    #hk-l2 { top: 360px; }
+    #hk-l3 { top: 300px; }
+    #hk-kicker { position: absolute; left: 144px; top: 236px; font-size: 28px; letter-spacing: 0.14em; text-transform: uppercase; color: #9A9A9A; }
+    #hk-clip { position: absolute; right: 160px; top: 60px; width: 540px; height: 960px; border-radius: 28px; overflow: hidden; background: #000; }
+    #hk-clip video { width: 100%; height: 100%; object-fit: cover; }
+    #hk-glyph { position: absolute; right: 120px; top: 40px; width: 92px; height: 92px; border-radius: 20px; background: #DA1E28; }
+    #hk-glyph svg { width: 100%; height: 100%; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1920" data-height="1080">
+    <div id="hk-kicker" class="clip" data-start="0" data-duration="8.04">#OpenSourceHiggsfield</div>
+
+    <div id="hk-l1" class="hk-line clip" data-start="0" data-duration="2.5">
+      <span class="hk-mask"><span id="hk-l1a">Higgsfield said they'd</span></span>
+      <span class="hk-mask"><span id="hk-l1b">open source their platform.</span></span>
+    </div>
+    <div id="hk-l2" class="hk-line clip" data-start="2.5" data-duration="3.2">
+      <span class="hk-mask"><span id="hk-l2a">We took them at</span></span>
+      <span class="hk-mask"><span id="hk-l2b">their word.</span></span>
+    </div>
+    <div id="hk-l3" class="hk-line clip" data-start="5.7" data-duration="2.34">
+      <span class="hk-mask"><span id="hk-l3a">What if every video</span></span>
+      <span class="hk-mask"><span id="hk-l3b">was its own <span class="hk-red">source code?</span></span></span>
+    </div>
+
+    <div id="hk-clip">
+      <video id="hk-video" class="clip" data-start="0" data-duration="8.04" src="assets/clips/5868a595.mp4" muted playsinline></video>
+    </div>
+    <div id="hk-glyph" class="clip" data-start="5.7" data-duration="2.34">
+      <svg viewBox="0 0 64 64"><path id="hk-fork" d="M32 54V34M32 34 18 20M32 34l14-14M18 20v-8M46 20v-8" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1"/></svg>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    const up = (sel, t) => tl.fromTo(sel, { yPercent: 105 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, t);
+    up("#hk-l1a", 0.05); up("#hk-l1b", 0.2);
+    up("#hk-l2a", 2.55); up("#hk-l2b", 2.7);
+    up("#hk-l3a", 5.75); up("#hk-l3b", 5.9);
+    tl.fromTo("#hk-kicker", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.1);
+    tl.fromTo("#hk-clip", { clipPath: "inset(100% 0 0 0 round 28px)" }, { clipPath: "inset(0% 0 0 0 round 28px)", duration: 0.7, ease: "expo.out" }, 0.15);
+    tl.fromTo("#hk-clip", { scale: 1 }, { scale: 1.04, duration: 7.5, ease: "none" }, 0.2);
+    tl.fromTo("#hk-glyph", { scale: 0.4, rotation: -12 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2)" }, 6.6);
+    tl.fromTo("#hk-fork", { strokeDashoffset: 1.1 }, { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" }, 6.75);
+    window.__timelines["hook"] = tl;
+  </script>
+</template>
