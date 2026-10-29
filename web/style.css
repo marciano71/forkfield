@@ -136,3 +136,7 @@ pre { font-size: 11px; white-space: pre-wrap; word-break: break-word; color: #CF
   .sheet-inner { border-radius: 22px 22px 0 0; max-height: 92dvh; }
 }
 @media (prefers-reduced-motion: reduce) { .loader { animation-duration: 3s; } }
+
+#stepRead { text-align: center; padding: 10px 0 20px; }
+#readStrip { width: 100%; border-radius: 14px; margin-bottom: 18px; background: #000; }
+#stepRead .loader { width: 48px; height: 48px; }

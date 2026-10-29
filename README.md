@@ -12,6 +12,14 @@ No preset store, no gatekeeper. The video *is* the preset. #OpenSourceHiggsfield
 
 **▶ Demo video (1:40):** https://youtu.be/qAVeIeFBYFM · **Try it:** https://forkfield.estoesmarte.workers.dev · **Post:** https://x.com/Esto_es_Marte/status/2115850109632012499
 
+## Fork *any* video, not just Forkfield clips
+
+Drop a video that has no recipe (a clip you saw online, your own edit, anything) and Forkfield reads the effect for you:
+
+1. The browser grabs the **start, middle and end frames** and joins them into one image. The video itself never leaves your device.
+2. **Qwen3-VL 8B** (open weights, running in ComfyUI's `TextGenerate` node) looks at those frames and writes a recipe: a name, the end-frame edit and the motion, as JSON. Graph: [`workflows/forkfield_read_effect.api.json`](workflows/forkfield_read_effect.api.json).
+3. You see the recipe, edit it if you like, add your photo and generate. The new clip carries the recipe, so from then on anyone can fork it.
+
 ## How an effect works
 
 ```

@@ -23,13 +23,13 @@
     <section class="hero">
       <p class="kicker">#OpenSourceHiggsfield · built on ComfyUI</p>
       <h1>Fork any<br><em>video.</em></h1>
-      <p class="lede">Every Forkfield clip carries its own recipe inside the file. Saw one you like? Drop it here, add your photo, make it yours.</p>
+      <p class="lede">Saw a video effect you love? Drop it here, add your photo, make it yours. Forkfield clips carry their recipe inside the file; for any other video, open-weights AI reads the effect for you.</p>
 
       <label class="drop" id="drop">
         <input type="file" id="dropInput" accept="video/mp4,video/quicktime,video/webm" hidden>
         <span class="drop-icon">⑂</span>
-        <span class="drop-title">Drop a Forkfield video</span>
-        <span class="drop-sub">or tap to choose one · we read the recipe, never upload your clip anywhere else</span>
+        <span class="drop-title">Drop any video</span>
+        <span class="drop-sub">or tap to choose one · Forkfield clips fork instantly · any other video: we read its effect from 3 frames, the video itself never leaves your device</span>
       </label>
       <p class="status-line" id="health"></p>
     </section>
@@ -97,6 +97,13 @@
 
         <button class="cta" type="button" id="goBtn" disabled>Generate clip</button>
         <p class="fine">About a minute. Qwen-Image-Edit draws your final frame, LTX-2.5 animates from your photo to it. Open weights only.</p>
+      </div>
+
+      <div id="stepRead" hidden>
+        <img id="readStrip" alt="Start, middle and end frames of your video" hidden>
+        <div class="loader"><span></span></div>
+        <p class="wait-title" id="readMsg">Reading the effect…</p>
+        <p class="fine">Qwen3-VL 8B (open weights) looks at the start, middle and end of the video and writes a recipe you can edit. About 20 seconds.</p>
       </div>
 
       <div id="stepWait" hidden>

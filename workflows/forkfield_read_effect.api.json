@@ -1,0 +1,36 @@
+{
+  "1": {
+    "_meta": { "title": "Forkfield · Frames of any video (start | middle | end)" },
+    "class_type": "LoadImage",
+    "inputs": { "image": "{{FRAMES}}" }
+  },
+  "2": {
+    "_meta": { "title": "Qwen3-VL 8B (open weights)" },
+    "class_type": "CLIPLoader",
+    "inputs": { "clip_name": "qwen3vl_8b_int8_convrot.safetensors", "type": "qwen_image", "device": "default" }
+  },
+  "3": {
+    "_meta": { "title": "Forkfield · Write the recipe" },
+    "class_type": "TextGenerate",
+    "inputs": {
+      "clip": ["2", 0],
+      "image": ["1", 0],
+      "max_length": 700,
+      "sampling_mode": "on",
+      "sampling_mode.temperature": 0.3,
+      "sampling_mode.top_k": 64,
+      "sampling_mode.top_p": 0.95,
+      "sampling_mode.min_p": 0.05,
+      "sampling_mode.repetition_penalty": 1.05,
+      "sampling_mode.seed": 7,
+      "thinking": false,
+      "use_default_template": true,
+      "prompt": "This image shows three frames of one short video effect, side by side from left to right: START, MIDDLE and END. Look closely at how the END frame differs from the START frame. Turn the effect into a reusable recipe so it can be applied to a photo of a different person. Reply with ONLY a JSON object, no markdown, with these keys:\n\"name\": a catchy 2 to 4 word name for the effect.\n\"endframe_prompt\": an image-edit instruction that turns a photo of any person into the END frame. Start with \"Keep the same person with the identical face, hair, skin tone and expression.\" then describe the END frame as one coherent image, exactly as it looks: what the person has become or where they are, background, clothes, art style, objects, lighting and framing. Never describe the specific person (no hair, age, gender or ethnicity). If the END frame no longer shows the person, start with \"Replace the whole image with\" and describe the END frame.\n\"motion_prompt\": 2 to 4 sentences describing how the video moves from START to END: what the person does, the transformation, the camera move, and the sounds you would expect. Call the subject only \"the person\".\nDescribe places and people with neutral, respectful words. Never mention brands, logos, written text or real people's names."
+    }
+  },
+  "4": {
+    "_meta": { "title": "Recipe text" },
+    "class_type": "PreviewAny",
+    "inputs": { "source": ["3", 0] }
+  }
+}

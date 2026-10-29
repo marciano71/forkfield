@@ -70,6 +70,7 @@ function makeRecipe({ preset, overrides = {}, parent = null, author = "anonymous
       motion_prompt: (overrides.motion_prompt || base.motion_prompt || "").slice(0, 2000),
       duration: clampDuration(overrides.duration ?? base.duration ?? 5),
       seed: Number.isInteger(overrides.seed) ? overrides.seed : base.seed ?? 7,
+      ...(overrides.source === "read-from-video" ? { source: "read-from-video" } : {}),
     },
     models: ENGINE === "partner"
       ? ["FLUX 3 Image (end frame)", "LTX-2.5 Fast API (first + last frame to video)"]
@@ -252,6 +253,51 @@ async function pollJob(job) {
   return job;
 }
 
+// ---------- read the effect of any video ----------
+// The browser sends one image with three frames (start | middle | end);
+// Qwen3-VL writes the recipe as JSON.
+
+const readJobs = new Map();
+
+function parseRecipeText(text) {
+  const raw = String(text || "");
+  const start = raw.indexOf("{");
+  const end = raw.lastIndexOf("}");
+  if (start === -1 || end <= start) throw new Error("Could not read an effect from this video. Try another clip.");
+  const j = JSON.parse(raw.slice(start, end + 1));
+  const clean = (s, n) => String(s || "").replace(/\s+/g, " ").trim().slice(0, n);
+  const effect = { name: clean(j.name, 60) || "Read effect", endframe_prompt: clean(j.endframe_prompt, 2000), motion_prompt: clean(j.motion_prompt, 2000) };
+  if (!effect.endframe_prompt || !effect.motion_prompt) throw new Error("Could not read an effect from this video. Try another clip.");
+  return effect;
+}
+
+async function startRead(framesBuffer) {
+  const id = crypto.randomUUID().slice(0, 8);
+  const name = await comfyUpload(framesBuffer, `forkfield_read_${id}.jpg`);
+  const template = JSON.parse(await fsp.readFile(path.join(ROOT, "workflows", "forkfield_read_effect.api.json"), "utf8"));
+  const promptId = await comfyQueue(fillWorkflow(template, { FRAMES: name }));
+  readJobs.set(id, { promptId, started: Date.now(), state: "running" });
+  return id;
+}
+
+async function pollRead(id) {
+  const job = readJobs.get(id);
+  if (!job) return { state: "error", error: "Unknown job" };
+  if (job.state !== "running") return job;
+  const h = await comfyHistory(job.promptId);
+  const elapsed = Math.round((Date.now() - job.started) / 1000);
+  if (!h) return { state: "running", elapsed };
+  if (h.status?.status_str === "error") return Object.assign(job, { state: "error", error: "Reading the video failed. Try another clip." });
+  const text = Object.values(h.outputs || {}).flatMap((o) => o.text || [])[0];
+  if (!text) return { state: "running", elapsed };
+  try {
+    Object.assign(job, { state: "done", effect: parseRecipeText(text) });
+  } catch (e) {
+    Object.assign(job, { state: "error", error: e.message });
+  }
+  return { ...job, elapsed };
+}
+
 // ---------- HTTP ----------
 
 const MIME = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".mp4": "video/mp4", ".jpg": "image/jpeg", ".png": "image/png", ".svg": "image/svg+xml", ".ico": "image/x-icon", ".webmanifest": "application/manifest+json" };
@@ -315,6 +361,15 @@ const server = http.createServer(async (req, res) => {
       const job = await startJob(body);
       return send(res, 202, { jobId: job.id, recipe: job.recipe });
     }
+    if (url.pathname === "/api/read-effect" && req.method === "POST") {
+      const raw = await readBody(req, 12 * 1024 * 1024);
+      const form = await new Request("http://local/", { method: "POST", headers: { "content-type": req.headers["content-type"] }, body: raw }).formData();
+      const frames = form.get("frames");
+      if (!frames || typeof frames === "string") throw new Error("Missing frames");
+      return send(res, 202, { readId: await startRead(Buffer.from(await frames.arrayBuffer())) });
+    }
+    const rm = url.pathname.match(/^\/api\/read\/([\w-]+)$/);
+    if (rm) return send(res, 200, await pollRead(rm[1]));
     const jm = url.pathname.match(/^\/api\/jobs\/([\w-]+)$/);
     if (jm) {
       const job = jobs.get(jm[1]);

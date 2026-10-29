@@ -112,7 +112,7 @@ function openSheet({ recipe, parent = null }) {
 }
 
 function showStep(id) {
-  for (const s of ["stepCreate", "stepWait", "stepDone"]) $(s).hidden = s !== id;
+  for (const s of ["stepCreate", "stepWait", "stepDone", "stepRead"]) $(s).hidden = s !== id;
   $("errorBox").hidden = true;
 }
 
@@ -141,6 +141,7 @@ $("goBtn").addEventListener("click", async () => {
     motion_prompt: $("fMotion").value.trim(),
     duration: Number($("fDuration").value),
     seed: parseInt($("fSeed").value, 10),
+    ...(e.source ? { source: e.source } : {}),
   };
   const edited = overrides.endframe_prompt !== e.endframe_prompt || overrides.motion_prompt !== e.motion_prompt;
   if (edited && !/remix/i.test(overrides.name)) overrides.name = `${e.name} (remix)`;
@@ -235,11 +236,87 @@ async function inspect(file) {
   $("health").textContent = "Reading the recipe…";
   try {
     const recipe = await readRecipeLocally(file);
-    if (!recipe) throw new Error("This video has no Forkfield recipe inside. Use a clip downloaded from Forkfield with its Download button: WhatsApp, Instagram, X and YouTube re-encode videos and strip the recipe.");
+    if (!recipe) {
+      // Not a Forkfield clip: read the effect from its frames instead.
+      $("health").textContent = "";
+      return readEffect(file);
+    }
     $("health").textContent = "";
     openSheet({ recipe, parent: recipe.id });
   } catch (err) {
     $("health").innerHTML = `<span class="bad">●</span> ${esc(err.message)}`;
+  }
+}
+
+// ---------- any video: read its effect ----------
+// Grab the start, middle and end frames in the browser, send them as one
+// image, and let Qwen3-VL (open weights, on ComfyUI) write the recipe.
+async function videoFrames(file) {
+  const url = URL.createObjectURL(file);
+  const v = document.createElement("video");
+  v.muted = true;
+  v.playsInline = true;
+  v.preload = "auto";
+  v.src = url;
+  await new Promise((ok, bad) => {
+    v.onloadeddata = ok;
+    v.onerror = () => bad(new Error("This browser can't open that video. Try an MP4."));
+  });
+  const d = Number.isFinite(v.duration) && v.duration > 0 ? v.duration : 1;
+  const times = [Math.min(0.1, d / 10), d / 2, Math.max(0, d - 0.15)];
+  const W = 432, H = 768;
+  const c = document.createElement("canvas");
+  c.width = W * 3;
+  c.height = H;
+  const g = c.getContext("2d");
+  g.fillStyle = "#000";
+  g.fillRect(0, 0, c.width, c.height);
+  for (let i = 0; i < 3; i++) {
+    await new Promise((ok) => { v.onseeked = ok; v.currentTime = times[i]; });
+    // cover-crop each frame into its 9:16 slot
+    const s = Math.max(W / v.videoWidth, H / v.videoHeight);
+    const w = v.videoWidth * s, h = v.videoHeight * s;
+    g.drawImage(v, i * W + (W - w) / 2, (H - h) / 2, w, h);
+  }
+  URL.revokeObjectURL(url);
+  return new Promise((ok) => c.toBlob(ok, "image/jpeg", 0.9));
+}
+
+async function readEffect(file) {
+  state.recipe = null;
+  state.parent = null;
+  $("sheetKicker").textContent = "Any video";
+  $("sheetTitle").textContent = "Reading the effect…";
+  $("forkOf").hidden = true;
+  showStep("stepRead");
+  $("readMsg").textContent = "Grabbing the first, middle and last frames…";
+  if (!$("sheet").open) $("sheet").showModal();
+  try {
+    const frames = await videoFrames(file);
+    $("readStrip").src = URL.createObjectURL(frames);
+    $("readStrip").hidden = false;
+    $("readMsg").textContent = "Qwen3-VL is watching the video and writing its recipe…";
+    const form = new FormData();
+    form.append("frames", frames, "frames.jpg");
+    const { readId } = await api("/api/read-effect", { method: "POST", body: form });
+    for (;;) {
+      await sleep(2000);
+      const r = await api(`/api/read/${readId}`);
+      if (r.state === "error") throw new Error(r.error);
+      if (r.state === "done") {
+        const recipe = { effect: { preset: "read-from-video", source: "read-from-video", duration: 5, seed: 7, ...r.effect } };
+        openSheet({ recipe });
+        $("sheetKicker").textContent = "Effect read from your video";
+        $("recipeEdit").open = true;
+        return;
+      }
+    }
+  } catch (err) {
+    showStep("stepCreate");
+    $("sheetTitle").textContent = "Couldn't read that video";
+    $("errorBox").textContent = err.message;
+    $("errorBox").hidden = false;
+    $("goBtn").disabled = true;
   }
 }
 
