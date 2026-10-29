@@ -180,7 +180,12 @@ function showClip(clip, fresh = false) {
   $("sheetKicker").textContent = fresh ? "Done" : "Clip";
   $("sheetTitle").textContent = clip.effect.name;
   $("forkOf").hidden = true;
-  $("resultVideo").src = clip.video;
+  // Phones only autoplay muted video: start muted, the controls unmute it.
+  const rv = $("resultVideo");
+  rv.muted = true;
+  rv.setAttribute("muted", "");
+  if (clip.poster) rv.poster = clip.poster;
+  rv.src = clip.video;
   $("dlBtn").href = clip.video;
   $("dlBtn").setAttribute("download", `forkfield-${clip.effect.preset}-${clip.id}.mp4`);
   const { video, poster, seconds, ...recipe } = clip;
@@ -189,6 +194,7 @@ function showClip(clip, fresh = false) {
   $("forkAgain").onclick = () => openSheet({ recipe: clip, parent: clip.id });
   showStep("stepDone");
   if (!$("sheet").open) $("sheet").showModal();
+  rv.play().catch(() => {});
 }
 
 function fail(msg) {
@@ -256,12 +262,32 @@ async function videoFrames(file) {
   const v = document.createElement("video");
   v.muted = true;
   v.playsInline = true;
+  v.setAttribute("playsinline", "");
+  v.setAttribute("muted", "");
   v.preload = "auto";
-  v.src = url;
-  await new Promise((ok, bad) => {
-    v.onloadeddata = ok;
-    v.onerror = () => bad(new Error("This browser can't open that video. Try an MP4."));
-  });
+  // Phones only decode a video that is in the page, so keep it there, invisible.
+  v.style.cssText = "position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none;";
+  document.body.append(v);
+  const fail = () => new Error("Couldn't open that video on this device. Try an MP4, or open Forkfield on a computer.");
+  const within = (p, ms) => Promise.race([p, new Promise((_, bad) => setTimeout(() => bad(fail()), ms))]);
+  try {
+    v.src = url;
+    v.load();
+    await within(new Promise((ok, bad) => {
+      v.onloadedmetadata = ok;
+      v.onerror = () => bad(fail());
+    }), 15000);
+    // iOS Safari decodes no frame until playback starts once.
+    try { await v.play(); v.pause(); } catch {}
+    if (!v.videoWidth) throw fail();
+    return await grabFrames(v);
+  } finally {
+    v.remove();
+    URL.revokeObjectURL(url);
+  }
+}
+
+async function grabFrames(v) {
   const d = Number.isFinite(v.duration) && v.duration > 0 ? v.duration : 1;
   const times = [Math.min(0.1, d / 10), d / 2, Math.max(0, d - 0.15)];
   const W = 432, H = 768;
@@ -272,13 +298,18 @@ async function videoFrames(file) {
   g.fillStyle = "#000";
   g.fillRect(0, 0, c.width, c.height);
   for (let i = 0; i < 3; i++) {
-    await new Promise((ok) => { v.onseeked = ok; v.currentTime = times[i]; });
+    // wait for the seek, but never hang on browsers that skip the event
+    await new Promise((ok) => {
+      const t = setTimeout(ok, 2500);
+      v.onseeked = () => { clearTimeout(t); ok(); };
+      v.currentTime = times[i];
+    });
+    if (v.requestVideoFrameCallback) await new Promise((ok) => { const t = setTimeout(ok, 600); v.requestVideoFrameCallback(() => { clearTimeout(t); ok(); }); });
     // cover-crop each frame into its 9:16 slot
     const s = Math.max(W / v.videoWidth, H / v.videoHeight);
     const w = v.videoWidth * s, h = v.videoHeight * s;
     g.drawImage(v, i * W + (W - w) / 2, (H - h) / 2, w, h);
   }
-  URL.revokeObjectURL(url);
   return new Promise((ok) => c.toBlob(ok, "image/jpeg", 0.9));
 }
 
