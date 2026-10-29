@@ -10,7 +10,7 @@ Higgsfield's moat is its presets: the viral effects live behind a closed app. Fo
 
 No preset store, no gatekeeper. The video *is* the preset. #OpenSourceHiggsfield
 
-<!-- demo video / GIF goes here -->
+**▶ Demo video (1:40):** https://youtu.be/qAVeIeFBYFM · **Try it:** https://forkfield.estoesmarte.workers.dev · **Post:** https://x.com/Esto_es_Marte/status/2115850109632012499
 
 ## How an effect works
 
