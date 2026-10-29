@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Forkfield</title>
+  <meta name="description" content="Fork any video. Higgsfield-style effects built on ComfyUI, where every clip carries its own recipe.">
+  <meta name="theme-color" content="#141414">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="/" aria-label="Forkfield home"><span class="glyph">⑂</span> Forkfield</a>
+    <nav>
+      <a href="#effects">Effects</a>
+      <a href="#tree">Fork tree</a>
+      <a href="https://github.com/marciano71/forkfield" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="kicker">#OpenSourceHiggsfield · built on ComfyUI</p>
+      <h1>Fork any<br><em>video.</em></h1>
+      <p class="lede">Every Forkfield clip carries its own recipe inside the file. Saw one you like? Drop it here, add your photo, make it yours.</p>
+
+      <label class="drop" id="drop">
+        <input type="file" id="dropInput" accept="video/mp4,video/quicktime,video/webm" hidden>
+        <span class="drop-icon">⑂</span>
+        <span class="drop-title">Drop a Forkfield video</span>
+        <span class="drop-sub">or tap to choose one · we read the recipe, never upload your clip anywhere else</span>
+      </label>
+      <p class="status-line" id="health"></p>
+    </section>
+
+    <section id="effects">
+      <div class="section-head">
+        <h2>Start from an effect</h2>
+        <p>Six recipes to fork. Edit any of them and you've made a new one.</p>
+      </div>
+      <div class="grid" id="effectGrid"></div>
+    </section>
+
+    <section id="tree">
+      <div class="section-head">
+        <h2>Fork tree</h2>
+        <p>Every clip made here, and who it was forked from.</p>
+      </div>
+      <div id="treeList" class="tree"><p class="empty">No clips yet. Make the first one.</p></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Forkfield · MIT licensed · ComfyUI + Qwen-Image-Edit + LTX-2.5 (open weights) · made by <a href="https://estoesmarte.com" target="_blank" rel="noopener">EstoEsMarte</a></p>
+  </footer>
+
+  <!-- Create / fork sheet -->
+  <dialog id="sheet" class="sheet">
+    <form method="dialog" class="sheet-inner" id="sheetForm">
+      <div class="sheet-head">
+        <div>
+          <p class="kicker" id="sheetKicker">New clip</p>
+          <h3 id="sheetTitle">Effect</h3>
+        </div>
+        <button class="icon-btn" value="close" aria-label="Close">✕</button>
+      </div>
+
+      <div id="stepCreate">
+        <p class="fork-of" id="forkOf" hidden></p>
+        <label class="photo-pick" id="photoPick">
+          <input type="file" id="photoInput" accept="image/png,image/jpeg,image/webp" hidden>
+          <img id="photoPreview" alt="" hidden>
+          <span id="photoHint"><strong>Add your photo</strong><br>Waist-up, vertical, good light. Only use faces you have permission to use.</span>
+        </label>
+
+        <details class="recipe-edit" id="recipeEdit">
+          <summary>Edit the recipe <span>(this makes a fork)</span></summary>
+          <label>Final frame — what you turn into
+            <textarea id="fEnd" rows="4"></textarea>
+          </label>
+          <label>Motion — how you get there
+            <textarea id="fMotion" rows="4"></textarea>
+          </label>
+          <div class="row">
+            <label>Seconds
+              <select id="fDuration"><option>3</option><option>4</option><option selected>5</option><option>6</option><option>8</option></select>
+            </label>
+            <label>Seed
+              <input id="fSeed" type="number" min="0" max="4294967295">
+            </label>
+            <label>Your name
+              <input id="fAuthor" maxlength="40" placeholder="anonymous">
+            </label>
+          </div>
+        </details>
+
+        <button class="cta" type="button" id="goBtn" disabled>Generate clip</button>
+        <p class="fine">About a minute. Qwen-Image-Edit draws your final frame, LTX-2.5 animates from your photo to it. Open weights only.</p>
+      </div>
+
+      <div id="stepWait" hidden>
+        <div class="loader"><span></span></div>
+        <p class="wait-title" id="waitTitle">Drawing your final frame…</p>
+        <p class="fine" id="waitTime">0s</p>
+      </div>
+
+      <div id="stepDone" hidden>
+        <video id="resultVideo" playsinline controls loop autoplay></video>
+        <div class="actions">
+          <a class="cta" id="dlBtn" download>Download (recipe inside)</a>
+          <button class="ghost" type="button" id="forkAgain">⑂ Fork this</button>
+        </div>
+        <details class="recipe-view">
+          <summary>See the recipe</summary>
+          <pre id="recipeJson"></pre>
+          <a class="ghost small" id="wfBtn" download>Download ComfyUI workflow</a>
+        </details>
+      </div>
+
+      <p class="error" id="errorBox" hidden></p>
+    </form>
+  </dialog>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

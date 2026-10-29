@@ -1,0 +1,50 @@
+{
+  "1": {
+    "_meta": { "title": "Forkfield · Your photo" },
+    "class_type": "LoadImage",
+    "inputs": { "image": "{{PHOTO}}" }
+  },
+  "2": {
+    "_meta": { "title": "Forkfield · End frame (FLUX 3 edit)" },
+    "class_type": "Flux3ImageNode",
+    "inputs": {
+      "prompt": "{{ENDFRAME_PROMPT}}",
+      "images.image_1": ["1", 0],
+      "aspect_ratio": "9:16",
+      "resolution": "1K",
+      "grounding": false,
+      "safety_tolerance": 2,
+      "seed": "{{SEED}}"
+    }
+  },
+  "3": {
+    "_meta": { "title": "Forkfield · Save end frame" },
+    "class_type": "SaveImage",
+    "inputs": { "images": ["2", 0], "filename_prefix": "forkfield/endframe" }
+  },
+  "4": {
+    "_meta": { "title": "Forkfield · Motion (LTX-2.5, first + last frame)" },
+    "class_type": "LtxApi25ImageToVideo",
+    "inputs": {
+      "image": ["1", 0],
+      "last_frame": ["2", 0],
+      "model": "LTX-2.5 (Fast)",
+      "model.duration": "{{DURATION}}",
+      "model.resolution": "720x1280",
+      "model.fps": "25",
+      "model.generate_audio": true,
+      "prompt": "{{MOTION_PROMPT}}",
+      "seed": "{{SEED}}"
+    }
+  },
+  "5": {
+    "_meta": { "title": "Forkfield · Save clip" },
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": ["4", 0],
+      "filename_prefix": "forkfield/clip",
+      "format": "auto",
+      "format.codec": "auto"
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "clips": [
+    {
+      "forkfield": 1,
+      "id": "5868a595",
+      "parent": null,
+      "author": "forkfield",
+      "created": "2026-10-28T18:11:23.016Z",
+      "effect": {
+        "preset": "portal-to-mars",
+        "name": "Portal to Mars",
+        "workflow": "forkfield_open.api.json",
+        "endframe_prompt": "Keep the same person with the identical face, hair, skin tone, expression and pose. Change the background to the red dusty surface of Mars with rust-colored dunes and a pale butterscotch sky with two small moons, and change the clothes to a white spacesuit without helmet. Photorealistic cinematic vertical photo.",
+        "motion_prompt": "The person smiles and snaps their fingers. A glowing red portal ripples open around them and the background dissolves into swirling red dust. The camera pushes in slowly as the dust settles: they now stand on the surface of Mars in a white spacesuit, red dunes and a pale sky behind, and they laugh. Whoosh, wind, a deep cinematic boom.",
+        "duration": 5,
+        "seed": 7
+      },
+      "models": [
+        "Qwen-Image-Edit 2511 + Lightning LoRA (end frame)",
+        "LTX-2.5 22B distilled (first + last frame to video, with audio)"
+      ],
+      "video": "/clips/5868a595.mp4",
+      "poster": "/clips/5868a595.jpg"
+    },
+    {
+      "forkfield": 1,
+      "id": "39514667",
+      "parent": null,
+      "author": "forkfield",
+      "created": "2026-10-28T18:11:23.208Z",
+      "effect": {
+        "preset": "action-figure",
+        "name": "Action Figure",
+        "workflow": "forkfield_open.api.json",
+        "endframe_prompt": "Turn the same person into a glossy plastic collectible action figure with the identical face, hair and clothes, standing inside a plain unbranded toy blister box with a clear plastic window and simple solid red cardboard backing with no logos, no brand names and no text, with two small accessories beside the figure, displayed on a toy store shelf. Product photo, vertical.",
+        "motion_prompt": "The person strikes a heroic pose. Their skin turns glossy like plastic, their body stiffens, and a plain red toy box with a clear plastic window snaps shut around them as the camera pulls back to reveal the packaged action figure on a toy store shelf. Plastic click, cardboard thud, a playful jingle.",
+        "duration": 5,
+        "seed": 11
+      },
+      "models": [
+        "Qwen-Image-Edit 2511 + Lightning LoRA (end frame)",
+        "LTX-2.5 22B distilled (first + last frame to video, with audio)"
+      ],
+      "video": "/clips/39514667.mp4",
+      "poster": "/clips/39514667.jpg"
+    },
+    {
+      "forkfield": 1,
+      "id": "7e68b285",
+      "parent": null,
+      "author": "forkfield",
+      "created": "2026-10-28T18:11:23.358Z",
+      "effect": {
+        "preset": "museum-painting",
+        "name": "Museum Piece",
+        "workflow": "forkfield_open.api.json",
+        "endframe_prompt": "Turn the same person into a classical oil painting with visible brush strokes, keeping the identical face, pose and clothes, inside an ornate gold frame hanging on a deep red wall of a quiet art museum under a soft gallery spotlight. Vertical photo of the gallery wall.",
+        "motion_prompt": "The person freezes mid-smile. Thick oil-paint brush strokes sweep across them and the background, turning everything into a classical painting, while the camera slowly pulls back to reveal an ornate gold frame hanging on a red museum wall. Soft museum echo, brush strokes, a single piano note.",
+        "duration": 5,
+        "seed": 23
+      },
+      "models": [
+        "Qwen-Image-Edit 2511 + Lightning LoRA (end frame)",
+        "LTX-2.5 22B distilled (first + last frame to video, with audio)"
+      ],
+      "video": "/clips/7e68b285.mp4",
+      "poster": "/clips/7e68b285.jpg"
+    },
+    {
+      "forkfield": 1,
+      "id": "f895af9f",
+      "parent": null,
+      "author": "forkfield",
+      "created": "2026-10-28T18:11:23.519Z",
+      "effect": {
+        "preset": "outfit-flip",
+        "name": "Outfit Flip",
+        "workflow": "forkfield_open.api.json",
+        "endframe_prompt": "Keep the same person with the identical face, hair, skin tone, expression and pose. Keep the same background. Change the clothes to a tailored black suit with a bold red silk shirt and gold accents, red carpet glamour lighting with camera flashes. Photorealistic vertical photo.",
+        "motion_prompt": "The person spins around once on the spot. As they turn, a burst of red fabric and sparkles wraps around them and their clothes transform mid-spin into a sharp black suit with a red silk shirt. They finish the spin facing the camera with a confident smile as camera flashes pop. Fabric swoosh, sparkle, camera shutter clicks.",
+        "duration": 5,
+        "seed": 31
+      },
+      "models": [
+        "Qwen-Image-Edit 2511 + Lightning LoRA (end frame)",
+        "LTX-2.5 22B distilled (first + last frame to video, with audio)"
+      ],
+      "video": "/clips/f895af9f.mp4",
+      "poster": "/clips/f895af9f.jpg"
+    },
+    {
+      "forkfield": 1,
+      "id": "4c78534b",
+      "parent": null,
+      "author": "forkfield",
+      "created": "2026-10-28T18:11:23.649Z",
+      "effect": {
+        "preset": "earth-zoom-out",
+        "name": "Earth Zoom Out",
+        "workflow": "forkfield_open.api.json",
+        "endframe_prompt": "Replace the whole image with a satellite view of planet Earth from orbit at golden hour: Central America and the Pacific coast below thin clouds, city lights starting to glow, a thin blue atmosphere glowing on the curved horizon and black space with stars above. Photorealistic, vertical.",
+        "motion_prompt": "The person looks up and waves at the camera. The camera rockets straight up and away, the street shrinks into the city, the city shrinks into the coastline, and the shot keeps pulling back through the clouds until the whole curved planet Earth hangs in black space. Rushing wind turning into deep space silence.",
+        "duration": 5,
+        "seed": 43
+      },
+      "models": [
+        "Qwen-Image-Edit 2511 + Lightning LoRA (end frame)",
+        "LTX-2.5 22B distilled (first + last frame to video, with audio)"
+      ],
+      "video": "/clips/4c78534b.mp4",
+      "poster": "/clips/4c78534b.jpg"
+    },
+    {
+      "forkfield": 1,
+      "id": "d0321769",
+      "parent": null,
+      "author": "forkfield",
+      "created": "2026-10-28T18:11:23.827Z",
+      "effect": {
+        "preset": "comic-panel",
+        "name": "Comic Panel",
+        "workflow": "forkfield_open.api.json",
+        "endframe_prompt": "Redraw the same person as a bold comic book hero panel with the identical face, hair and pose: thick black ink outlines, halftone dots, flat bright colors, dynamic speed lines behind and an empty comic speech burst. Vertical comic page.",
+        "motion_prompt": "The person punches the air toward the camera. On impact the whole frame cracks into ink lines and halftone dots, colors flatten into bold comic tones, speed lines burst behind them and the final pose freezes as a comic book panel. A cartoon punch sound, paper rustle, an upbeat sting.",
+        "duration": 5,
+        "seed": 53
+      },
+      "models": [
+        "Qwen-Image-Edit 2511 + Lightning LoRA (end frame)",
+        "LTX-2.5 22B distilled (first + last frame to video, with audio)"
+      ],
+      "video": "/clips/d0321769.mp4",
+      "poster": "/clips/d0321769.jpg"
+    }
+  ]
+}
