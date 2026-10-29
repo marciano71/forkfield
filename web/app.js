@@ -234,7 +234,8 @@ async function readRecipeLocally(file) {
 async function inspect(file) {
   $("health").textContent = "Reading the recipe…";
   try {
-    const recipe = (await readRecipeLocally(file)) || (await api("/api/inspect", { method: "POST", body: file }));
+    const recipe = await readRecipeLocally(file);
+    if (!recipe) throw new Error("This video has no Forkfield recipe inside. Use a clip downloaded from Forkfield with its Download button: WhatsApp, Instagram, X and YouTube re-encode videos and strip the recipe.");
     $("health").textContent = "";
     openSheet({ recipe, parent: recipe.id });
   } catch (err) {
