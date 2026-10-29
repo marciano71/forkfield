@@ -12,8 +12,8 @@ export default defineConfig({
       CLIPS: bindings.kv(),
       ASSETS: bindings.assets(),
       COMFY_API_KEY: bindings.secret(),
-      DAILY_LIMIT: bindings.text("30"),
-      PER_IP_LIMIT: bindings.text("3"),
+      DAILY_LIMIT: bindings.text("60"),
+      PER_IP_LIMIT: bindings.text("12"),
     },
   },
 });
