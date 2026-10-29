@@ -1,0 +1,13 @@
+{
+  "name": "forkfield-cloudflare",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "assets": "rm -rf public && mkdir -p public/samples && cp -R ../../web/. public/ && cp -R ../../samples/clips public/samples/clips",
+    "deploy": "npm run assets && cf deploy"
+  },
+  "devDependencies": {
+    "cf": "^0.15.0",
+    "wrangler": "^4.152.0"
+  }
+}

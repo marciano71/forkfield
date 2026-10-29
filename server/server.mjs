@@ -301,7 +301,17 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === "/api/presets") return send(res, 200, presets);
     if (url.pathname === "/api/clips") return send(res, 200, db.clips);
     if (url.pathname === "/api/generate" && req.method === "POST") {
-      const body = JSON.parse((await readBody(req)).toString("utf8"));
+      const raw = await readBody(req);
+      let body;
+      if (String(req.headers["content-type"]).startsWith("multipart/form-data")) {
+        // Web app sends the photo as a file plus a "meta" JSON field.
+        const form = await new Request("http://local/", { method: "POST", headers: { "content-type": req.headers["content-type"] }, body: raw }).formData();
+        const photo = form.get("photo");
+        const type = (photo.type || "image/jpeg").replace("image/jpg", "image/jpeg");
+        body = { ...JSON.parse(form.get("meta") || "{}"), photo: `data:${type};base64,${Buffer.from(await photo.arrayBuffer()).toString("base64")}` };
+      } else {
+        body = JSON.parse(raw.toString("utf8"));
+      }
       const job = await startJob(body);
       return send(res, 202, { jobId: job.id, recipe: job.recipe });
     }

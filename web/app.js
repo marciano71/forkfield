@@ -147,11 +147,11 @@ $("goBtn").addEventListener("click", async () => {
   try {
     showStep("stepWait");
     tick(0);
-    const { jobId } = await api("/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ photo: state.photo, presetId: e.preset, overrides, parent: state.parent, author: author || "anonymous" }),
-    });
+    // Photo goes as a file, settings as JSON: cheap to forward for any backend.
+    const form = new FormData();
+    form.append("photo", await (await fetch(state.photo)).blob(), "photo.jpg");
+    form.append("meta", JSON.stringify({ presetId: e.preset, overrides, parent: state.parent, author: author || "anonymous" }));
+    const { jobId } = await api("/api/generate", { method: "POST", body: form });
     await waitFor(jobId);
   } catch (err) {
     fail(err.message);
